@@ -1,3 +1,4 @@
+import { BUTTON } from 'shared/const/button';
 import './App.css';
 
 const App: React.FC = () => {
@@ -7,8 +8,13 @@ const App: React.FC = () => {
         <div className="previous-operand"></div>
         <div className="current-operand"></div>
       </div>
-      <button className="span-two">AC</button>
-      <button className="span-two">DEL</button>
+
+      {BUTTON.map((el, i) => {
+        if (i === 0 || i === BUTTON.length) {
+          return <button className="span-two">{el}</button>;
+        }
+        return <button>{el}</button>;
+      })}
     </div>
   );
 };
