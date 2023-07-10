@@ -9,6 +9,7 @@ const initialState: State = {
   operation: null,
   previousOperand: null,
   currentOperand: null,
+  overwrite: false,
 };
 
 const reducer = (state: State, { type, payload }: Action): State => {
@@ -16,17 +17,21 @@ const reducer = (state: State, { type, payload }: Action): State => {
 
   switch (type) {
     case ACTIONS.ADD_DIGIT:
+      if (state.overwrite) {
+        return { ...state, currentOperand: payload?.digit, overwrite: false };
+      }
+
       // проверка на внесение двух 0, таких цифр не бывает
-      if (payload.digit === '0' && state.currentOperand === '0') return state;
+      if (payload?.digit === '0' && state.currentOperand === '0') return state;
 
       // проверка на внесение двух точек
-      if (payload.digit === '.' && state.currentOperand?.includes('.')) {
+      if (payload?.digit === '.' && state.currentOperand?.includes('.')) {
         return state;
       }
 
       return {
         ...state,
-        currentOperand: `${state.currentOperand || ''}${payload.digit}`,
+        currentOperand: `${state.currentOperand || ''}${payload?.digit}`,
       };
 
     case ACTIONS.CHOOSE_OPERATION:
@@ -35,13 +40,13 @@ const reducer = (state: State, { type, payload }: Action): State => {
       }
 
       if (state.currentOperand === null) {
-        return { ...state, operation: payload.operation };
+        return { ...state, operation: payload?.operation };
       }
 
       if (state.previousOperand === null) {
         return {
           ...state,
-          operation: payload.operation,
+          operation: payload?.operation,
           previousOperand: state.currentOperand,
           currentOperand: null,
         };
@@ -50,12 +55,52 @@ const reducer = (state: State, { type, payload }: Action): State => {
       return {
         ...state,
         previousOperand: evaluate(state),
-        operation: payload.operation,
+        operation: payload?.operation,
         currentOperand: null,
+      };
+
+    case ACTIONS.EVALUATE:
+      if (
+        state.operation === null ||
+        state.currentOperand === null ||
+        state.previousOperand === null
+      ) {
+        return state;
+      }
+
+      return {
+        ...state,
+        overwrite: true,
+        previousOperand: null,
+        operation: null,
+        currentOperand: evaluate(state),
       };
 
     case ACTIONS.CLEAR:
       return initialState;
+
+    case ACTIONS.DELETE_DIGIT:
+      if (state.overwrite) {
+        return {
+          ...state,
+          overwrite: false,
+          currentOperand: null,
+        };
+      }
+
+      if (state.currentOperand === null) return state;
+
+      if (state.currentOperand.length === 1) {
+        return {
+          ...state,
+          currentOperand: null,
+        };
+      }
+
+      return {
+        ...state,
+        currentOperand: state.currentOperand.slice(0, -1),
+      };
   }
 };
 
@@ -65,6 +110,14 @@ const App: React.FC = () => {
 
   const handlerClear = (digit: string) => {
     dispatch({ type: ACTIONS.CLEAR, payload: { digit } });
+  };
+
+  const handlerEvaluate = () => {
+    dispatch({ type: ACTIONS.EVALUATE });
+  };
+
+  const handlerDelete = () => {
+    dispatch({ type: ACTIONS.DELETE_DIGIT });
   };
 
   return (
@@ -88,9 +141,17 @@ const App: React.FC = () => {
             </button>
           );
 
-        if (i === 0 || i === BUTTON.length - 1) {
+        if (i === 1) {
           return (
-            <button className="span-two" key={digit}>
+            <button onClick={handlerDelete} key={digit}>
+              {digit}
+            </button>
+          );
+        }
+
+        if (i === BUTTON.length - 1) {
+          return (
+            <button className="span-two" key={digit} onClick={handlerEvaluate}>
               {digit}
             </button>
           );
