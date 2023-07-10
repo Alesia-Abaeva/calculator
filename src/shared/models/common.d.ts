@@ -1,5 +1,5 @@
 interface Action {
-  type: import('shared/const/actions').ACTIONS;
+  type: import('shared/const').ACTIONS;
   payload?: {
     digit?: number | string;
     operation?: string;
