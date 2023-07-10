@@ -2,6 +2,7 @@ import React from 'react';
 import { ACTIONS } from 'shared/const/actions';
 import { BUTTON } from 'shared/const/button';
 import { DigitButton, OperationButton } from 'shared/ui';
+import { evaluate } from 'shared/utils/evaluate';
 import './App.css';
 
 const initialState: State = {
@@ -28,12 +29,13 @@ const reducer = (state: State, { type, payload }: Action): State => {
         currentOperand: `${state.currentOperand || ''}${payload.digit}`,
       };
 
-    case ACTIONS.CLEAR:
-      return initialState;
-
     case ACTIONS.CHOOSE_OPERATION:
       if (state.currentOperand === null && state.previousOperand === null) {
         return state;
+      }
+
+      if (state.currentOperand === null) {
+        return { ...state, operation: payload.operation };
       }
 
       if (state.previousOperand === null) {
@@ -44,6 +46,16 @@ const reducer = (state: State, { type, payload }: Action): State => {
           currentOperand: null,
         };
       }
+
+      return {
+        ...state,
+        previousOperand: evaluate(state),
+        operation: payload.operation,
+        currentOperand: null,
+      };
+
+    case ACTIONS.CLEAR:
+      return initialState;
   }
 };
 
