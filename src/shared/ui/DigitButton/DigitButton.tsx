@@ -2,7 +2,7 @@ import { ACTIONS } from 'shared/const/actions';
 
 interface DigitButton {
   digit: string | number;
-  dispatch: ({ type, payload }: Reducer) => void;
+  dispatch: ({ type, payload }: Action) => void;
   className?: string;
 }
 

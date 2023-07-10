@@ -1,12 +1,13 @@
-interface Reducer {
+interface Action {
   type: import('shared/const/actions').ACTIONS;
   payload: {
-    digit: number | string;
+    digit?: number | string;
+    operation?: string;
   };
 }
 
 interface State {
-  currentOperand: string;
-  previousOperand: string;
-  operation: string;
+  currentOperand: string | null;
+  previousOperand: string | null;
+  operation: string | null;
 }

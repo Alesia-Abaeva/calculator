@@ -1,22 +1,59 @@
 import React from 'react';
 import { ACTIONS } from 'shared/const/actions';
 import { BUTTON } from 'shared/const/button';
-import { DigitButton } from 'shared/ui';
+import { DigitButton, OperationButton } from 'shared/ui';
 import './App.css';
 
-const reducer = (state: State, { type, payload }: Reducer) => {
+const initialState: State = {
+  operation: null,
+  previousOperand: null,
+  currentOperand: null,
+};
+
+const reducer = (state: State, { type, payload }: Action): State => {
+  console.log(state);
+
   switch (type) {
     case ACTIONS.ADD_DIGIT:
+      // проверка на внесение двух 0, таких цифр не бывает
+      if (payload.digit === '0' && state.currentOperand === '0') return state;
+
+      // проверка на внесение двух точек
+      if (payload.digit === '.' && state.currentOperand?.includes('.')) {
+        return state;
+      }
+
       return {
         ...state,
         currentOperand: `${state.currentOperand || ''}${payload.digit}`,
       };
+
+    case ACTIONS.CLEAR:
+      return initialState;
+
+    case ACTIONS.CHOOSE_OPERATION:
+      if (state.currentOperand === null && state.previousOperand === null) {
+        return state;
+      }
+
+      if (state.previousOperand === null) {
+        return {
+          ...state,
+          operation: payload.operation,
+          previousOperand: state.currentOperand,
+          currentOperand: null,
+        };
+      }
   }
 };
 
 const App: React.FC = () => {
   const [{ currentOperand, previousOperand, operation }, dispatch] =
-    React.useReducer(reducer, {});
+    React.useReducer(reducer, initialState);
+
+  const handlerClear = (digit: string) => {
+    dispatch({ type: ACTIONS.CLEAR, payload: { digit } });
+  };
 
   return (
     <div className="calculator-grid">
@@ -28,13 +65,35 @@ const App: React.FC = () => {
       </div>
 
       {BUTTON.map(({ digit, operand }, i) => {
+        if (i === 0)
+          return (
+            <button
+              className="span-two"
+              onClick={() => handlerClear(digit)}
+              key={digit}
+            >
+              {digit}
+            </button>
+          );
+
         if (i === 0 || i === BUTTON.length - 1) {
-          return <button className="span-two">{digit}</button>;
+          return (
+            <button className="span-two" key={digit}>
+              {digit}
+            </button>
+          );
         }
 
-        if (operand) return <button>{digit}</button>;
+        if (operand)
+          return (
+            <OperationButton
+              dispatch={dispatch}
+              operation={digit}
+              key={digit}
+            />
+          );
 
-        return <DigitButton digit={digit} dispatch={dispatch} />;
+        return <DigitButton digit={digit} dispatch={dispatch} key={digit} />;
       })}
     </div>
   );
