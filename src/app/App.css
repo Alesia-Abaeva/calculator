@@ -4,3 +4,54 @@
   padding: 2rem;
   text-align: center;
 }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.calculator-grid {
+  display: grid;
+  margin-top: 2rem;
+  grid-template-columns: repeat(4, 6rem);
+  grid-template-rows: minmax(7rem, auto) repeat(5, 6rem);
+}
+
+.output {
+  grid-column: 1 / -1;
+  background-color: #646cffc9;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 0.75rem;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.output .previous-operand {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1.5rem;
+}
+
+.output .current-operand {
+  color: white;
+  font-size: 2.5rem;
+}
+
+.span-two {
+  grid-column: span 2;
+}
+
+.calculator-grid > button {
+  font-size: 2rem;
+  border: 1px solid white;
+  outline: none;
+}
+
+.calculator-grid > button:hover,
+.calculator-grid > button:focus {
+  background-color: #ffc466e4;
+}
