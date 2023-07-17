@@ -19,10 +19,10 @@ export const reducer = (state: State, { type, payload }: Action): State => {
         };
       }
 
-      // проверка на внесение двух 0, таких цифр не бывает
+      // checking for entering two 0s, there are no such numbers
       if (payload?.digit === '0' && state.currentOperand === '0') return state;
 
-      // проверка на внесение двух точек
+      // checking for the introduction of two points
       if (payload?.digit === '.' && state.currentOperand?.includes('.')) {
         return state;
       }

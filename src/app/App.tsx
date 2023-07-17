@@ -8,6 +8,26 @@ const App: React.FC = () => {
   const [{ currentOperand, previousOperand, operation }, dispatch] =
     React.useReducer(reducer, initialState);
 
+  const handlerClear = () => {
+    dispatch({ type: ACTIONS.CLEAR });
+  };
+
+  const handlerEvaluate = () => {
+    dispatch({ type: ACTIONS.EVALUATE });
+  };
+
+  const handlerDelete = () => {
+    dispatch({ type: ACTIONS.DELETE_DIGIT });
+  };
+
+  const handlerDigit = (digit: string) => {
+    dispatch({ type: ACTIONS.ADD_DIGIT, payload: { digit } });
+  };
+
+  const handlerOperand = (operation: string) => {
+    dispatch({ type: ACTIONS.CHOOSE_OPERATION, payload: { operation } });
+  };
+
   const downHandler = ({ key }: KeyboardEvent) => {
     switch (key) {
       case '/':
@@ -44,26 +64,6 @@ const App: React.FC = () => {
       window.removeEventListener('keydown', downHandler);
     };
   }, []);
-
-  const handlerClear = () => {
-    dispatch({ type: ACTIONS.CLEAR });
-  };
-
-  const handlerEvaluate = () => {
-    dispatch({ type: ACTIONS.EVALUATE });
-  };
-
-  const handlerDelete = () => {
-    dispatch({ type: ACTIONS.DELETE_DIGIT });
-  };
-
-  const handlerDigit = (digit: string) => {
-    dispatch({ type: ACTIONS.ADD_DIGIT, payload: { digit } });
-  };
-
-  const handlerOperand = (operation: string) => {
-    dispatch({ type: ACTIONS.CHOOSE_OPERATION, payload: { operation } });
-  };
 
   return (
     <div className="calculator-grid">
