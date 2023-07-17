@@ -6,7 +6,6 @@ export const formatOperand = (operand: string | null) => {
   if (operand === null) return;
 
   const [integer, decimal] = operand.split('.');
-  console.log(decimal);
 
   if (!decimal) return INTEGER_FORMATTER.format(Number(integer));
 

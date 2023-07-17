@@ -1,5 +1,5 @@
 import React from 'react';
-import { ACTIONS, BUTTON } from 'shared/const';
+import { ACTIONS, BUTTON, DIGIT, OPERATION } from 'shared/const';
 import { initialState, reducer } from 'shared/reducer';
 import { DigitButton, OperationButton } from 'shared/ui';
 import { formatOperand } from 'shared/utils';
@@ -8,6 +8,47 @@ import './App.css';
 const App: React.FC = () => {
   const [{ currentOperand, previousOperand, operation }, dispatch] =
     React.useReducer(reducer, initialState);
+
+  const downHandler = ({ key }: KeyboardEvent) => {
+    // digit button
+    if (DIGIT.includes(key)) {
+      dispatch({ type: ACTIONS.ADD_DIGIT, payload: { digit: key } });
+      return;
+    }
+
+    if (OPERATION.includes(key)) {
+      dispatch({ type: ACTIONS.CHOOSE_OPERATION, payload: { operation: key } });
+      return;
+    }
+
+    if (key === '/') {
+      dispatch({ type: ACTIONS.CHOOSE_OPERATION, payload: { operation: '÷' } });
+      return;
+    }
+
+    if (key === 'Enter' || key === '=') {
+      handlerEvaluate();
+      return;
+    }
+
+    if (key === 'Backspace' || key === 'Delete') {
+      handlerDelete();
+      return;
+    }
+
+    if (key === 'Escape') {
+      handlerClear();
+      return;
+    }
+  };
+
+  React.useEffect(() => {
+    window.addEventListener('keydown', downHandler);
+
+    return () => {
+      window.removeEventListener('keydown', downHandler);
+    };
+  }, []);
 
   const handlerClear = () => {
     dispatch({ type: ACTIONS.CLEAR });

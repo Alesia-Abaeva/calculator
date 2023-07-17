@@ -1,6 +1,4 @@
 export const BUTTON = [
-  //   { digit: 'AC', operand: true },
-  //   { digit: 'DEL', operand: true },
   { digit: '÷', operand: true },
   { digit: '1', operand: false },
   { digit: '2', operand: false },
@@ -16,5 +14,7 @@ export const BUTTON = [
   { digit: '-', operand: true },
   { digit: '.', operand: false },
   { digit: '0', operand: false },
-  //   { digit: '=', operand: true },
 ];
+
+export const DIGIT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
+export const OPERATION = ['+', '-', '÷'];
