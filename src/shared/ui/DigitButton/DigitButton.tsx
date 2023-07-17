@@ -1,19 +1,11 @@
-import { ACTIONS } from 'shared/const/actions';
-
 interface DigitButton {
   digit: string | number;
-  dispatch: ({ type, payload }: Action) => void;
+  dispatch: () => void;
   className?: string;
 }
 
 const DigitButton: React.FC<DigitButton> = ({ dispatch, digit }) => {
-  return (
-    <button
-      onClick={() => dispatch({ type: ACTIONS.ADD_DIGIT, payload: { digit } })}
-    >
-      {digit}
-    </button>
-  );
+  return <button onClick={dispatch}>{digit}</button>;
 };
 
 export default DigitButton;

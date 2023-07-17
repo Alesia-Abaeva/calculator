@@ -62,6 +62,14 @@ const App: React.FC = () => {
     dispatch({ type: ACTIONS.DELETE_DIGIT });
   };
 
+  const handlerDigit = (digit: string) => {
+    dispatch({ type: ACTIONS.ADD_DIGIT, payload: { digit } });
+  };
+
+  const handlerOperand = (operation: string) => {
+    dispatch({ type: ACTIONS.CHOOSE_OPERATION, payload: { operation } });
+  };
+
   return (
     <div className="calculator-grid">
       <div className="output">
@@ -77,17 +85,25 @@ const App: React.FC = () => {
       <button onClick={handlerDelete}>DEL</button>
 
       {BUTTON.map(({ digit, operand }) => {
-        if (operand) {
-          return (
-            <OperationButton
-              dispatch={dispatch}
-              operation={digit}
-              key={digit}
-            />
-          );
-        }
+        // if (operand) {
+        //   return (
+        //     <OperationButton
+        //       dispatch={() => handlerOperand(digit)}
+        //       operation={digit}
+        //       key={digit}
+        //     />
+        //   );
+        // }
 
-        return <DigitButton digit={digit} dispatch={dispatch} key={digit} />;
+        return (
+          <DigitButton
+            digit={digit}
+            dispatch={() =>
+              operand ? handlerOperand(digit) : handlerDigit(digit)
+            }
+            key={digit}
+          />
+        );
       })}
 
       <button className="span-two" onClick={handlerEvaluate}>
