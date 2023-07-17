@@ -1,7 +1,6 @@
 import React from 'react';
 import { ACTIONS, BUTTON, DIGIT, OPERATION } from 'shared/const';
 import { initialState, reducer } from 'shared/reducer';
-import { DigitButton, OperationButton } from 'shared/ui';
 import { formatOperand } from 'shared/utils';
 import './App.css';
 
@@ -85,24 +84,15 @@ const App: React.FC = () => {
       <button onClick={handlerDelete}>DEL</button>
 
       {BUTTON.map(({ digit, operand }) => {
-        // if (operand) {
-        //   return (
-        //     <OperationButton
-        //       dispatch={() => handlerOperand(digit)}
-        //       operation={digit}
-        //       key={digit}
-        //     />
-        //   );
-        // }
-
         return (
-          <DigitButton
-            digit={digit}
-            dispatch={() =>
+          <button
+            key={digit}
+            onClick={() =>
               operand ? handlerOperand(digit) : handlerDigit(digit)
             }
-            key={digit}
-          />
+          >
+            {digit}
+          </button>
         );
       })}
 
