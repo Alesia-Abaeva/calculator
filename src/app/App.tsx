@@ -9,35 +9,31 @@ const App: React.FC = () => {
     React.useReducer(reducer, initialState);
 
   const downHandler = ({ key }: KeyboardEvent) => {
-    // digit button
-    if (DIGIT.includes(key)) {
-      dispatch({ type: ACTIONS.ADD_DIGIT, payload: { digit: key } });
-      return;
-    }
+    switch (key) {
+      case '/':
+        handlerOperand('÷');
+        break;
+      case 'Enter' || '=':
+        handlerEvaluate();
+        break;
+      case 'Backspace' || 'Delete':
+        handlerDelete();
+        break;
+      case 'Escape':
+        handlerDelete();
+        break;
 
-    if (OPERATION.includes(key)) {
-      dispatch({ type: ACTIONS.CHOOSE_OPERATION, payload: { operation: key } });
-      return;
-    }
+      default:
+        if (DIGIT.includes(key)) {
+          handlerDigit(key);
+          return;
+        }
 
-    if (key === '/') {
-      dispatch({ type: ACTIONS.CHOOSE_OPERATION, payload: { operation: '÷' } });
-      return;
-    }
-
-    if (key === 'Enter' || key === '=') {
-      handlerEvaluate();
-      return;
-    }
-
-    if (key === 'Backspace' || key === 'Delete') {
-      handlerDelete();
-      return;
-    }
-
-    if (key === 'Escape') {
-      handlerClear();
-      return;
+        if (OPERATION.includes(key)) {
+          handlerOperand(key);
+          return;
+        }
+        break;
     }
   };
 
